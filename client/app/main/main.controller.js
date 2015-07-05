@@ -13,7 +13,7 @@ angular.module('stockOverwatchApp')
 			if($scope.newStock === '') {
 				return;
 			}
-			$http.post('/api/stocks', { name: $scope.newStock });
+			$http.post('/api/stocks', { name: $scope.newStock.toUpperCase() });
 			$scope.newStock = '';
 		};
 
