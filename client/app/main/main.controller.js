@@ -2,26 +2,26 @@
 
 angular.module('stockOverwatchApp')
 	.controller('MainCtrl', function ($scope, $http, socket) {
-		$scope.awesomeThings = [];
-		
-		$http.get('/api/things').success(function(awesomeThings) {
-			$scope.awesomeThings = awesomeThings;
-			socket.syncUpdates('thing', $scope.awesomeThings);
+		$scope.theStocks = [];
+
+		$http.get('/api/stocks').success(function(theStocks) {
+			$scope.theStocks = theStocks;
+			socket.syncUpdates('stock', $scope.theStocks);
 		});
 
-		$scope.addThing = function() {
-			if($scope.newThing === '') {
+		$scope.addStock = function() {
+			if($scope.newStock === '') {
 				return;
 			}
-			$http.post('/api/things', { name: $scope.newThing });
-			$scope.newThing = '';
+			$http.post('/api/stocks', { name: $scope.newStock });
+			$scope.newStock = '';
 		};
 
-		$scope.deleteThing = function(thing) {
-			$http.delete('/api/things/' + thing._id);
+		$scope.deleteStock = function(stock) {
+			$http.delete('/api/stocks/' + stock._id);
 		};
 
 		$scope.$on('$destroy', function () {
-			socket.unsyncUpdates('thing');
+			socket.unsyncUpdates('stock');
 		});
 	});
