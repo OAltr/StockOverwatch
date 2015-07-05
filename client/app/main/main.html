@@ -11,6 +11,12 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
+			<canvas class="chart chart-line" data="data" labels="labels" series="series" options="options"></canvas>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
 			<h1 class="page-header">Features:</h1>
 			<ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="stock in theStocks">
 				<li><a href="#">{{stock.name}}<button type="button" class="close" ng-click="deleteStock(stock)">&times;</button></a></li>
