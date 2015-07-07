@@ -32,18 +32,38 @@ angular.module('stockOverwatchApp')
 			var startDateStr = startDate.yyyymmdd();
 			var endDateStr = endDate.yyyymmdd();
 
-			$scope.series = $scope.theStocks.map(function(stock) {
+			var symbols = $scope.theStocks.map(function(stock) {
 				return stock.name;
-			});
+			}).join('%22,%22');
 
 			var stockURL = 'http://query.yahooapis.com/v1/public/' +
 				'yql?q=select%20*%20from%20yahoo.finance.historicaldata%20' +
-				'where%20symbol%20in%20(%22' + $scope.series.join('%22,%22') + '%22)%20and%20' +
+				'where%20symbol%20in%20(%22' + symbols + '%22)%20and%20' +
 				'startDate%20%3D%20%22' + startDateStr + '%22%20and%20endDate%20%3D%20%22' + endDateStr + '%22' +
 				'&format=json&diagnostics=true&env=http://datatables.org/alltables.env&format=json';
 
-			$http.get(stockURL).success(function(data) {
-				console.log(data);
+			$http.get(stockURL).success(function(res) {
+				var data = res.query.results.quote;
+
+				$scope.series = data.map(function(dataPoint) {
+					return dataPoint.Symbol;
+				}).filter(function(symbol, index, symbols) {
+					return symbols.indexOf(symbol) === index;
+				});
+
+				$scope.labels = data.map(function(dataPoint) {
+					return dataPoint.Date;
+				}).filter(function(date, index, dates) {
+					return dates.indexOf(date) === index;
+				});
+
+				$scope.data = $scope.series.map(function(symbol) {
+					return data.filter(function(dataPoint) {
+						return dataPoint.Symbol === symbol;
+					}).map(function(dataPoint) {
+						return dataPoint.Close;
+					});
+				});
 			});
 		};
 
