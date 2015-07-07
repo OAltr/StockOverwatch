@@ -2,6 +2,13 @@
 
 angular.module('stockOverwatchApp')
 	.controller('MainCtrl', function ($scope, $http, socket) {
+		Date.prototype.yyyymmdd = function() {
+		  var yyyy = this.getFullYear().toString();
+		  var mm = (this.getMonth()+1).toString();
+		  var dd  = this.getDate().toString();
+		  return yyyy + '-' + (mm[1]?mm:'0'+mm[0]) + '-' + (dd[1]?dd:'0'+dd[0]);
+		};
+
 		$scope.theStocks = [];
 		$scope.series = ['AAPL', 'FB'];
 		$scope.data = [
@@ -16,9 +23,35 @@ angular.module('stockOverwatchApp')
 			pointDot : false
 		};
 
+		$scope.loadData = function() {
+			var startDate = new Date();
+			var endDate = new Date();
+
+			startDate.setMonth(endDate.getMonth()-5);
+
+			var startDateStr = startDate.yyyymmdd();
+			var endDateStr = endDate.yyyymmdd();
+
+			$scope.series = $scope.theStocks.map(function(stock) {
+				return stock.name;
+			});
+
+			var stockURL = 'http://query.yahooapis.com/v1/public/' +
+				'yql?q=select%20*%20from%20yahoo.finance.historicaldata%20' +
+				'where%20symbol%20in%20(%22' + $scope.series.join('%22,%22') + '%22)%20and%20' +
+				'startDate%20%3D%20%22' + startDateStr + '%22%20and%20endDate%20%3D%20%22' + endDateStr + '%22' +
+				'&format=json&diagnostics=true&env=http://datatables.org/alltables.env&format=json';
+
+			$http.get(stockURL).success(function(data) {
+				console.log(data);
+			});
+		};
+
 		$http.get('/api/stocks').success(function(theStocks) {
 			$scope.theStocks = theStocks;
-			socket.syncUpdates('stock', $scope.theStocks);
+			socket.syncUpdates('stock', $scope.theStocks, $scope.loadData);
+
+			$scope.loadData();
 		});
 
 		$scope.addStock = function() {
