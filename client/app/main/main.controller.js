@@ -10,14 +10,12 @@ angular.module('stockOverwatchApp')
 		};
 
 		$scope.theStocks = [];
-		$scope.series = ['AAPL', 'FB'];
-		$scope.data = [
-			[1,3,2,7,3,1],
-			[3,2,7,3,1,1]
-		];
-		$scope.labels = ['One', 'Two', 'Three', 'Four', 'Five', 'Six'];
+		$scope.series = [];
+		$scope.data = [];
+		$scope.labels = [];
 		$scope.options = {
 			responsive: true,
+			showScale: false,
 			scaleShowGridLines : false,
 			bezierCurve : false,
 			pointDot : false
