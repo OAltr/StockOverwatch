@@ -11,6 +11,6 @@ Stock.find({}).remove(function() {
 	Stock.create({
 		name : 'AAPL',
 	}, {
-		name : 'FB2A',
+		name : 'GOOG',
 	});
 });
