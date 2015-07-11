@@ -35,7 +35,7 @@ angular.module('stockOverwatchApp')
 				return stock.name;
 			}).join('%22,%22');
 
-			var stockURL = 'http://query.yahooapis.com/v1/public/' +
+			var stockURL = 'https://query.yahooapis.com/v1/public/' +
 				'yql?q=select%20*%20from%20yahoo.finance.historicaldata%20' +
 				'where%20symbol%20in%20(%22' + symbols + '%22)%20and%20' +
 				'startDate%20%3D%20%22' + startDateStr + '%22%20and%20endDate%20%3D%20%22' + endDateStr + '%22' +
